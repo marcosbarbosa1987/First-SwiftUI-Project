@@ -12,12 +12,19 @@ struct CardView: View {
     // MARK: - Properties
     
     let card: Card
+    let feedback = UIImpactFeedbackGenerator(style: .medium)
+    
+    @State private var fadeIn: Bool = false
+    @State private var moveDownard: Bool = false
+    @State private var moveUpward: Bool = false
+    @State private var showAlert: Bool = false
     
     // MARK: - Body
     
     var body: some View {
         ZStack {
             Image(card.imageName)
+                .opacity(fadeIn ? 1.0 : 0.0)
             
             VStack {
                 Text(card.title)
@@ -30,10 +37,12 @@ struct CardView: View {
                     .foregroundColor(.white)
                     .italic()
             }
-            .offset(y: -218)
+            .offset(y: moveDownard ?  -218 : -300)
             
             Button(action: {
+                feedback.impactOccurred()
                 playSound(sound: "sound-chime", type: "mp3")
+                self.showAlert.toggle()
             }, label: {
                 HStack {
                     Text(card.callToAction.uppercased())
@@ -51,7 +60,7 @@ struct CardView: View {
                 .clipShape(Capsule())
                 .shadow(color: Color("ColorShadow"), radius: 6, x: 0, y: 3)
             })
-            .offset(y: 210)
+            .offset(y: moveUpward ? 210 : 300)
         }
         .frame(width: 335, height: 545)
         .background(
@@ -59,6 +68,22 @@ struct CardView: View {
         )
         .cornerRadius(16)
         .shadow(radius: 8)
+        .onAppear() {
+            withAnimation(.linear(duration: 1.2)) {
+                self.fadeIn.toggle()
+            }
+            
+            withAnimation(.linear(duration: 0.8)) {
+                self.moveDownard.toggle()
+                self.moveUpward.toggle()
+            }
+        }
+        .alert(isPresented: $showAlert, content: {
+            Alert(
+                title: Text(card.title),
+                message: Text(card.message),
+                dismissButton: .default(Text("OK")))
+        })
     }
 }
 
