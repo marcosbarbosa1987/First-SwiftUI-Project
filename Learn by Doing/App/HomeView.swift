@@ -17,8 +17,8 @@ struct HomeView: View {
         
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(0 ..< 6) { item in
-                    CardView()
+                ForEach(cardData) { card in
+                    CardView(card: card)
                 }
             }
             .padding(20)
