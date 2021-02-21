@@ -14,8 +14,7 @@ struct ContentView: View {
     // MARK: - Body
     
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        CardView()
     }
 }
 
@@ -24,5 +23,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .previewDevice("iPhone 11 Pro")
     }
 }
